@@ -10,8 +10,7 @@ Created on Sat Jul 25 14:36:10 2020
 # plot the requested data
 # --> Label: Show imported files/ data
 # --> Entry: Tick the desired plot
-# --> Plot the graph and display it (in a seperate window?)
-
+# --> Plot the graph and display it 
 
 
 import pandas as pd
@@ -31,24 +30,18 @@ root.title('Excel Graph Maker')
 root.geometry('500x500')
 
 
-# select file
+# -- VARIABLES -- ##
 all_files = {}
 graph_files = {}
 r = {}
-data_keys = []
 checks = {}
 
 
-# -- functions -- #
+# -- FUNCTIONS -- #
 # read excel files into pandas
 
-def prepare_graph(filename):
-    next_data = pd.read_csv(filename)
-    graph_files[filename] = next_data
-    
-    data_keys = graph_files.keys()
 
-
+# select a file and create a check button for it
 def open_excel():
     filename = filedialog.askopenfilename(initialdir="/User/Windows 10/Desktop", title="select csv")
     
@@ -56,13 +49,6 @@ def open_excel():
         current_data = pd.read_csv(filename)
         all_files[filename] = current_data
         
-        #temp_title = Label(root, text=filename)
-        #temp_title.pack_forget()
-        #temp_title.pack()
-        
-        #temp_table = Label(root, text = current_data.head())
-        #temp_table.pack_forget()
-        #temp_table.pack()
         
         # create the filename for the checkbutton
         last_i = len(filename) - 1
@@ -90,15 +76,15 @@ def open_excel():
         messagebox.showerror("e","You alreay picked that file")
         
 
+#for debugging
 def show_all_files():
     a = Label(root, text=all_files.keys())
     a.pack()
 
 
+# plotting the selected data
 def make_graph():
-    
-    # NEED TO ACTUALLY EXTRACT THE DATA
-    
+        
     plt.figure()
     for i in all_files.keys():
         
@@ -114,19 +100,22 @@ def make_graph():
     plt.show()
     
 
-## -- Widgets -- ##
+## -- WIDGETS -- ##
+# create button that allows user to select file
 get_button = Button(root, text="Select Excel", command=open_excel)
 get_button.pack()
 
+# used for debugging
 show_all = Button(root, text="Show all_files", command=show_all_files).pack()
 
-# THE r THING
 
-
+# create button to graph
 make_graph_button = Button(root, text="Make Graph", command=make_graph).pack()
 
-#sliderV = Scale(root, from_0=0, to=1000)
-#sliderH = Scale(root, from_0=0, to=1000, orient=HORIZONTAL)
+
+# add scroll...
+
+
 
 root.mainloop()
 
