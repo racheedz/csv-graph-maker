@@ -13,6 +13,13 @@ Created on Sat Jul 25 14:36:10 2020
 # --> Plot the graph and display it 
 
 
+# TODO
+# ADD FUNCTIONALITY TO BETTER ALLOW USERS TO CUSTOMISE/ CHOOSE WHICH DATA HEADING
+# THEY WANT TO USE
+# -------> Popup window with checkboxes showing all availables headings
+# -------> .columns <---------
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -50,37 +57,38 @@ def prepare_graph(filename):
 
 # select a file and create a check button for it
 def open_excel():
-    filename = filedialog.askopenfilename(initialdir="/User/Windows 10/Desktop", title="select csv")
+    filenames = filedialog.askopenfilenames(initialdir="/User/Windows 10/Desktop", title="select csv")
     
-    if filename not in all_files:
-        current_data = pd.read_csv(filename)
-        all_files[filename] = current_data
-        
-        
-        # create the filename for the checkbutton
-        last_i = len(filename) - 1
-        last = filename[last_i]
-        true_filename_length = 0
-        
-        while last != "/":
-            true_filename_length += 1
-            last_i -= 1
+    for filename in filenames:
+        if filename not in all_files:
+            current_data = pd.read_csv(filename)
+            all_files[filename] = current_data
+            
+            
+            # create the filename for the checkbutton
+            last_i = len(filename) - 1
             last = filename[last_i]
-        
-        short_filename[filename] = filename[-true_filename_length:]
-        
-        # send file name into the dictionary for all files
-        prepare_graph(filename)
-        
-        r[filename] = IntVar()
-        # create a checkbutton
-        checks[filename] = Checkbutton(root, text = short_filename[filename], variable=r[filename], onvalue=1, 
-                    offvalue=0)
-        checks[filename].deselect()
-        checks[filename].pack()
-        
-    else:
-        messagebox.showerror("e","You alreay picked that file")
+            true_filename_length = 0
+            
+            while last != "/":
+                true_filename_length += 1
+                last_i -= 1
+                last = filename[last_i]
+            
+            short_filename[filename] = filename[-true_filename_length:]
+            
+            # send file name into the dictionary for all files
+            prepare_graph(filename)
+            
+            r[filename] = IntVar()
+            # create a checkbutton
+            checks[filename] = Checkbutton(root, text = short_filename[filename], variable=r[filename], onvalue=1, 
+                        offvalue=0)
+            checks[filename].deselect()
+            checks[filename].pack()
+            
+        else:
+            messagebox.showerror("e","You alreay picked that file")
         
 
 #for debugging
@@ -136,8 +144,6 @@ def show_flux():
             print_string = short_filename[i] + "'s FLUX is   =   " + flux + "LMH"
             flux_dict[i] = Label(top, text=print_string).pack()
     
-    
-
 
 
 ## -- WIDGETS -- ##
