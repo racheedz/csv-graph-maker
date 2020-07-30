@@ -44,6 +44,7 @@ r = {}
 checks = {}
 short_filename = {}
 flux_dict = {}
+toggler = 2
 
 # -- FUNCTIONS -- #
 # read csv files into pandas
@@ -75,7 +76,7 @@ def open_excel():
                 last_i -= 1
                 last = filename[last_i]
             
-            short_filename[filename] = filename[-true_filename_length:]
+            short_filename[filename] = filename[-true_filename_length:][:-4]
             
             # send file name into the dictionary for all files
             prepare_graph(filename)
@@ -110,8 +111,13 @@ def make_graph():
             #x = k[0]
             #y = k[1]
             
-            plt.scatter(np.array(range(len(graph_files[i]['Time'])))*10, graph_files[i]['Weight'])
-    
+            plt.scatter(np.array(range(len(graph_files[i]['Time'])))*10, graph_files[i]['Weight'], 
+                        label=short_filename[i])
+            
+    plt.ylabel('Weight (g)')
+    plt.xlabel('Time (s)')
+    plt.title('Water Flux Comparisons')
+    plt.legend(loc='upper left')
     plt.show()
     
 
@@ -145,8 +151,28 @@ def show_flux():
             flux_dict[i] = Label(top, text=print_string).pack()
     
 
+# toggle selection of all
+def toggle_selection():
+    
+    global toggler
+    
+    for i in all_files.keys():
+        if toggler % 2 == 0:
+            checks[i].select()
+        else:
+            checks[i].deselect()
+            
+    toggler += 1
+
+
 
 ## -- WIDGETS -- ##
+# add scroll...-- Need a Canvas??????????????????
+#sb = Scrollbar(root)
+#sb.pack(side=RIGHT, fill=Y) 
+#sb.config()# command = mylist.yview )  
+
+
 # create button that allows user to select file
 get_button = Button(root, text="Select Excel", command=open_excel)
 get_button.pack()
@@ -160,9 +186,8 @@ make_graph_button = Button(root, text="Make Graph", command=make_graph).pack()
 # create button that shows flux of selected
 make_flux_button = Button(root, text="Calculate J, Water Flux", command=show_flux).pack()
 
-
-# add scroll...
-
+# make toggle button
+make_toggle_button= Button(root, text="Select all", command=toggle_selection).pack()
 
 
 root.mainloop()
